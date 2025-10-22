@@ -21,6 +21,7 @@ const Index = () => {
 
   const [selectedCandidate, setSelectedCandidate] = useState<Candidate | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isAdminView, setIsAdminView] = useState(false);
 
   const handleVoteClick = (candidate: Candidate) => {
     setSelectedCandidate(candidate);
@@ -42,13 +43,19 @@ const Index = () => {
     setSelectedCandidate(null);
   };
 
+  const handleToggleAdminView = () => {
+    setIsAdminView(!isAdminView);
+  };
+
   return (
     <div className="min-h-screen bg-background">
       <VotingHeader
         isConnected={wallet.isConnected}
         address={wallet.address}
+        isAdminView={isAdminView}
         onConnect={connectWallet}
         onDisconnect={disconnectWallet}
+        onToggleAdminView={handleToggleAdminView}
       />
 
       {/* Main Content */}
@@ -70,7 +77,7 @@ const Index = () => {
             </p>
           </div>
         </div>
-      ) : isOwner ? (
+      ) : isAdminView ? (
         <AdminDashboard stats={stats} onEndElection={endElection} />
       ) : (
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
