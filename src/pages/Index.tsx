@@ -6,6 +6,7 @@ import AdminDashboard from "@/components/voting/AdminDashboard";
 import { useVoting } from "@/hooks/useVoting";
 import { Candidate } from "@/types/voting";
 import { Info } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 const Index = () => {
   const {
@@ -22,6 +23,13 @@ const Index = () => {
   const [selectedCandidate, setSelectedCandidate] = useState<Candidate | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isAdminView, setIsAdminView] = useState(false);
+
+  const connectAsOwner = () => {
+    // Conecta diretamente como owner para testes
+    const ownerAddress = "0x1234567890123456789012345678901234567890";
+    connectWallet();
+    // O hook useVoting já detectará automaticamente que é o owner
+  };
 
   const handleVoteClick = (candidate: Candidate) => {
     setSelectedCandidate(candidate);
@@ -71,10 +79,22 @@ const Index = () => {
             <h2 className="text-3xl font-bold text-vote-text-primary mb-4">
               Bem-vindo à Urna Descentralizada
             </h2>
-            <p className="text-muted-foreground">
+            <p className="text-muted-foreground mb-8">
               Um sistema de votação transparente e seguro baseado em blockchain.
               Conecte sua carteira para participar da eleição.
             </p>
+            
+            {/* Botão Owner */}
+            <div className="pt-6 border-t border-border">
+              <p className="text-xs text-muted-foreground mb-3">Ambiente de testes</p>
+              <Button
+                variant="secondary"
+                onClick={connectAsOwner}
+                className="bg-muted hover:bg-muted/80 text-muted-foreground"
+              >
+                Conectar como Owner do Contrato
+              </Button>
+            </div>
           </div>
         </div>
       ) : isAdminView ? (
