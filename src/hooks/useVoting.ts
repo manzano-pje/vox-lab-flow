@@ -72,6 +72,7 @@ export const useVoting = () => {
   });
 
   const [candidates] = useState<Candidate[]>(MOCK_CANDIDATES);
+  const [electionEnded, setElectionEnded] = useState(false);
   
   const [stats, setStats] = useState<VoteStats>({
     totalVoters: 100,
@@ -134,13 +135,13 @@ export const useVoting = () => {
   };
 
   const endElection = () => {
+    setElectionEnded(true);
+    
     const winner = stats.candidates.reduce((prev, current) =>
       current.votes > prev.votes ? current : prev
     );
 
-    toast.success(`Eleição encerrada! Vencedor: ${winner.name} com ${winner.votes} votos!`, {
-      duration: 5000,
-    });
+    return winner;
   };
 
   const isOwner = wallet.address?.toLowerCase() === OWNER_ADDRESS.toLowerCase();
@@ -150,6 +151,7 @@ export const useVoting = () => {
     candidates,
     stats,
     isOwner,
+    electionEnded,
     connectWallet,
     disconnectWallet,
     castVote,

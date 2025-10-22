@@ -1,23 +1,35 @@
+import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { VoteStats } from "@/types/voting";
 import { Trophy, Users, BarChart3, XCircle } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
+import WinnerModal from "./WinnerModal";
 
 interface AdminDashboardProps {
   stats: VoteStats;
-  onEndElection: () => void;
+  electionEnded: boolean;
+  onEndElection: () => { name: string; votes: number };
 }
 
-const AdminDashboard = ({ stats, onEndElection }: AdminDashboardProps) => {
-  const participationRate = stats.totalVoters > 0 
+const AdminDashboard = ({ stats, electionEnded, onEndElection }: AdminDashboardProps) => {
+  const [showWinnerModal, setShowWinnerModal] = useState(false);
+  const [winner, setWinner] = useState<{ name: string; votes: number } | null>(null);
+
+  const participationRate = stats.totalVoters > 0
     ? (stats.votedCount / stats.totalVoters) * 100 
     : 0;
 
   const totalVotes = stats.candidates.reduce((sum, c) => sum + c.votes, 0);
-  const winner = stats.candidates.reduce((prev, current) => 
+  const currentWinner = stats.candidates.reduce((prev, current) => 
     current.votes > prev.votes ? current : prev
   );
+
+  const handleEndElection = () => {
+    const electionWinner = onEndElection();
+    setWinner(electionWinner);
+    setShowWinnerModal(true);
+  };
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
@@ -26,12 +38,13 @@ const AdminDashboard = ({ stats, onEndElection }: AdminDashboardProps) => {
           Painel Administrativo
         </h2>
         <Button
-          onClick={onEndElection}
+          onClick={handleEndElection}
+          disabled={electionEnded}
           variant="destructive"
           className="gap-2"
         >
           <XCircle className="h-4 w-4" />
-          Encerrar Eleição
+          {electionEnded ? "Eleição Encerrada" : "Encerrar Eleição"}
         </Button>
       </div>
 
@@ -75,16 +88,16 @@ const AdminDashboard = ({ stats, onEndElection }: AdminDashboardProps) => {
         <Card className="vote-card border-2 border-primary">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">
-              Líder Atual
+              {electionEnded ? "Vencedor da Eleição" : "Líder Atual"}
             </CardTitle>
             <Trophy className="h-4 w-4 text-primary" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-primary">
-              {winner.name}
+              {currentWinner.name}
             </div>
             <p className="text-xs text-muted-foreground mt-1">
-              {winner.votes} votos ({totalVotes > 0 ? ((winner.votes / totalVotes) * 100).toFixed(1) : 0}%)
+              {currentWinner.votes} votos ({totalVotes > 0 ? ((currentWinner.votes / totalVotes) * 100).toFixed(1) : 0}%)
             </p>
           </CardContent>
         </Card>
@@ -135,6 +148,20 @@ const AdminDashboard = ({ stats, onEndElection }: AdminDashboardProps) => {
           </div>
         </CardContent>
       </Card>
+
+      {/* Winner Modal */}
+      {winner && (
+        <WinnerModal
+          isOpen={showWinnerModal}
+          onClose={() => setShowWinnerModal(false)}
+          winner={{
+            name: winner.name,
+            votes: winner.votes,
+            percentage: totalVotes > 0 ? (winner.votes / totalVotes) * 100 : 0
+          }}
+          totalVotes={totalVotes}
+        />
+      )}
     </div>
   );
 };

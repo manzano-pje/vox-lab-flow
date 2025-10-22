@@ -14,6 +14,7 @@ const Index = () => {
     candidates,
     stats,
     isOwner,
+    electionEnded,
     connectWallet,
     disconnectWallet,
     castVote,
@@ -98,7 +99,7 @@ const Index = () => {
           </div>
         </div>
       ) : isAdminView ? (
-        <AdminDashboard stats={stats} onEndElection={endElection} />
+        <AdminDashboard stats={stats} electionEnded={electionEnded} onEndElection={endElection} />
       ) : (
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="mb-8">
