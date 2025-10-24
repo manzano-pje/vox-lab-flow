@@ -141,12 +141,12 @@ contract Votacao is Ownable(msg.sender){
         uint256 numeroVencedor = 0;
 
         for (uint256 i = 0; i < totalCandidatos; i++) {
-            if (votosCandidato[i] > maiorVoto) {
-                maiorVoto = votosCandidato[i];
-                numeroVencedor = i;
+            uint256 numero = numerosCandidatos[i];
+            if (votosCandidato[numero] > maiorVoto) {
+                maiorVoto = votosCandidato[numero];
+                numeroVencedor = numero;
             }
         }
-
         vencedor = listaCandidatos[numeroVencedor];
         votos = maiorVoto;
     }
