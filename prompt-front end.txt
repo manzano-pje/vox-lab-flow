@@ -1,0 +1,85 @@
+🧑‍💻 Contexto
+
+Você é um desenvolvedor front-end sênior e irá desenvolver uma urna de votação descentralizada para a eleição de candidatos.
+A plataforma deverá seguir os melhores padrões de UI/UX.
+
+⚙️ PARÂMETROS PARA O DESENVOLVIMENTO
+🧩 Estrutura e Tecnologias
+
+Montar em React, já deixando estrutura preparada para montagem de smart contract e integração.
+
+Utilização de TypeScript.
+
+Layout com os melhores padrões de UX/UI, moderno e intuitivo.
+
+Foco em facilidade de utilização.
+
+🧠 Regras e Funcionalidades Gerais
+
+Deve haver uma barra de título com o logo da urna descentralizada, inspirado no logotipo do TSE utilizado nas urnas eletrônicas.
+
+O eleitor só pode votar se estiver com a carteira conectada.
+
+Cada eleitor poderá votar somente uma vez.
+
+🗳️ Tela de Votação (Eleitor Conectado)
+
+Ao conectar a carteira, deve aparecer:
+
+Lista horizontal com 4 cards de candidatos (rolável caso haja mais).
+
+Cada card deve conter:
+
+📷 Foto do candidato
+
+🧍 Nome do candidato
+
+🏛️ Partido
+
+🔢 Número
+
+📜 5 propostas
+
+🗳️ Botão para votar
+
+Após clicar em “Votar”
+
+Apresentar um modal de confirmação de voto, com botões:
+
+✅ Confirmar
+
+❌ Cancelar
+
+👑 Tela do Owner do Contrato
+
+Quando o owner (administrador) se conectar:
+
+Apresentar estatísticas da eleição fake, incluindo:
+
+📊 % de eleitores que votaram
+
+📋 Listagem de votos de cada candidato
+
+Adicionar um botão “Encerrar”, que:
+
+Mostra o candidato com o maior número de votos ao final.
+
+Após encerramento da eleição
+
+Exibir modal com os dados do vencedor.
+
+Desabilitar o botão para finalizar a eleição.
+
+🔗 Conexão de Carteira
+
+Adicionar na parte inferior um botão cinza para conectar a carteira do owner do contrato.
+
+🎨 REFERÊNCIA DE PALETA DE CORES (Urna Descentralizada)
+Elemento	Cor / Estilo
+Fundo da tela	#F5F6F8
+Card do candidato	Fundo branco, bordas arredondadas, sombra leve
+Foto do candidato	Circular, 80px, no topo do card
+Nome	Negrito, #212529
+Cargo e partido	Cinza, #6C757D
+Número	Verde, #00B074
+Hover (passar o mouse)
