@@ -1,13 +1,15 @@
-//SPDX-License-Informer: MIT
+// SPDX-License-Identifier: MIT
 pragma solidity ^0.8.20;
 
 import "./ComprovanteToken.sol";
-import "lib/OpenZeppelin-Contracts/contracts/access/Ownable2Step.sol";
+import "openzeppelin/access/Ownable.sol";
 
-contract Votacao is Ownable{ 
+contract Votacao is Ownable(msg.sender){ 
+    ComprovanteToken public comprovante;
+
     struct Candidato{
-        uint idCandidato;
-        uint numero;
+        uint256 idCandidato;
+        uint256 numero;
         string nome;
         string partido;
         string proposta1;
@@ -20,49 +22,46 @@ contract Votacao is Ownable{
     }
 
     // Events
-    event CancidatoVencedor (string candidato, string partido, uint numero, uint votos);
-    event ConfirmaVoto (address indexed eleitor, string candidato, string partido, uint numero);
+    event CancidatoVencedor (string candidato, string partido, uint256 numero, uint256 votos);
+    event ConfirmaVoto (address indexed eleitor, string candidato, string partido, uint256 numero);
 
     // Mappings
-    mapping (uint => candidato) public listaCandidatos;
-    mapping (uint => uint) public votosCandidato;
+    mapping (uint256 => Candidato) public listaCandidatos;
+    mapping (uint256 => uint256) public votosCandidato;
     mapping (address => bool) public jaVotou;
     
     // State Variables
-    uint private TOTALVOTOS = 0;
-    bool private ELEICAOABERTA = false;
-    uint private TOTALCANDIDATOS = 0;
+    uint256 private totalVotos = 0;
+    bool private eleicaoAberta = false;
+    uint256 private totalCandidatos = 0;
 
-    modifier eleicaoAberta() {
-        require (aberta, "Fora do horario de votacao.");
+    constructor(address _comprovante){
+        comprovante = ComprovanteToken(_comprovante);
+    }
+
+    modifier situacaoEleicao() {
+        require (eleicaoAberta, "Fora do horario de votacao.");
         _;
     }
 
-    modifier jaVotou(address _eleitor) {
-        require(!jaVotou[_eleitor], "Eleitor ja votou.");
-        _;
-    }
-
-    function gravaVotos(address _eleitor, uint numero) external eleicaoAberta() {
-
-        require(_eleitor != address(0), "Carteira invalida");
-        require(!jaVotou[_eleitor], "Eleitor ja votou.");
+    function gravaVotos(uint256 numero) external situacaoEleicao() {
+        require(!jaVotou[msg.sender], "Eleitor ja votou.");
         require(listaCandidatos[numero].existe, "Candidato nao existe.");
 
         votosCandidato[numero]++;
-        TOTALVOTOS++;       
-
+        totalVotos++;
         jaVotou[msg.sender] = true;
-        Candidato memory cand = Candidato[numero];
-        emit ConfirmaVoto(_eleitor, cand.nome, cand.partido, numero);
+
+        Candidato storage cand = listaCandidatos[numero];
+        uint256 tokenId = comprovante.mintComprovante(msg.sender, cand.uri);
+        emit ConfirmaVoto(msg.sender, cand.nome, cand.partido, numero);
     }
 
-    function listarCandidatos () public view returns(candidato [] memory){
-        require(TOTALCANDIDATOS != 0, "Nao existem candidatos cadastrados");
-        uint contador = 0;
-
-        Candidato[] memory candidatos = new Candidato[](TOTALCANDIDATOS);
-        for (uint i = 0; i < TOTALCANDIDATOS; i++){
+    function listarCandidatos () public view returns(Candidato [] memory){
+        require(totalCandidatos != 0, "Nao existem candidatos cadastrados");
+    
+        Candidato[] memory candidatos = new Candidato[](totalCandidatos);
+        for (uint256 i = 0; i < totalCandidatos; i++){
             candidatos[i] = listaCandidatos[i];
         }
         return candidatos;

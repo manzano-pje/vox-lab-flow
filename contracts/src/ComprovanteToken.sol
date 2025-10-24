@@ -1,14 +1,18 @@
-//SPDX-License-Informer: MIT
+//SPDX-License-Identifier: MIT
 pragma solidity ^0.8.20;
 
-                      
-import "openzeppelin/token/ERC721/extensions/ERC721URIStorage.sol";
-import "openzeppelin/access/Ownable2Steps.sol";
 
-contract ComprovanteToken. is ERC721URIStorage, Ownable(msg.sender){
+
+import "openzeppelin/token/ERC721/extensions/ERC721URIStorage.sol";
+import "openzeppelin/access/Ownable.sol";
+
+
+contract ComprovanteToken is ERC721URIStorage, Ownable{
     uint256 private _tokenIdCounter;
 
-    constructor()  ERC721("ComprovanteVotacao", "CVT") {}// parâmetros herdados de ERC721URIStorage
+    constructor() ERC721("ComprovanteVotacao", "CVT")
+     Ownable(msg.sender) {
+    }
 
     function mintComprovante(address to, string memory tokenURI) external onlyOwner returns(uint256){
         _tokenIdCounter++;  /// aumenta de 1 posição o id do token
