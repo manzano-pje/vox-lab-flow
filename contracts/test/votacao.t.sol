@@ -28,14 +28,12 @@ contract voracaoTest is Test{
 
     function testGravaVotosFalse() public{
         vm.prank(voter1);
-
         vm.expectRevert("Candidato nao existe.");
         votacao.gravaVotos(10);
     }
 
     function testGravaVotosOk() public{
         vm.prank(voter1);
-       
         votacao.gravaVotos(1);
         uint256 total = votacao.getTotalVotos(1);
         assertEq(total, 1, "Voto nao gravado corretamente");
