@@ -4,6 +4,7 @@ pragma solidity ^0.8.20;
 import "./ComprovanteToken.sol";
 import "openzeppelin/access/Ownable.sol";
 
+
 contract Votacao is Ownable(msg.sender){ 
     ComprovanteToken public comprovante;
 
