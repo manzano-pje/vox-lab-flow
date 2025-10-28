@@ -22,12 +22,14 @@
 
 ## 🧭 Estrutura do repositório / Repository structure
 
+```bash
 /contracts         # Smart contracts (Solidity)
 /frontend          # React app (UI + integração Web3)
 /scripts           # Scripts de deploy, utilitários
 /test              # Testes adicionais
 /README.md
 /LICENSE
+```
 
 ---
 
