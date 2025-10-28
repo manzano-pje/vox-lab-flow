@@ -1,41 +1,52 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.20;
 
-import "../src/ComprovanteToken.sol";
 import "forge-std/Test.sol";
+import "../src/ComprovanteToken.sol";
 
 contract ComprovanteTokenTest is Test {
+    ComprovanteToken public token;
+    address public owner;
+    address public voter1;
 
-    ComprovanteToken private token; // criação de uma instância do contrato ComprovanteToken
-    address private owner; // endereço do proprietário do contrato
-    address private voter1; // endereço do eleitor 1
-    address private voter2; // endereço do eleitor 2
-
-    // Configuração inicial do teste
-    function setUp() public { 
-        owner = address(this); // o contrato de teste atua como o proprietário
-        voter1 = address(0x1); // endereço fictício para o eleitor 1
-        voter2 = address(0x2); // endereço fictício para o eleitor 2
-        token = new ComprovanteToken("ComprovanteVotacao", "CVT", owner); //openzeppelin
+    function setUp() public {
+        owner = address(this);       // o contrato de teste será o owner
+        voter1 = address(0x1);       // simulando outro usuário
+        token = new ComprovanteToken(); // deploy do contrato
     }
 
-    function testMintingByOwner() public { // Testa a cunhagem de tokens pelo proprietário
-        token.mint(voter1, 1); // o proprietário cunha um token para o eleitor 1
-        assertEq(token.balanceOf(voter1), 1); // verifica se o eleitor 1 possui 1 token
+    // Testa cunhagem pelo owner
+    function testMintByOwner() public {
+        string memory uri = "ipfs://token1";
+        uint256 tokenId = token.mintComprovante(owner, uri);
+
+        // Verifica se o tokenId retornado é 1
+        assertEq(tokenId, 1);
+
+        // Verifica se o owner realmente possui o token
+        assertEq(token.ownerOf(tokenId), owner);
+
+        // Verifica se o tokenURI foi definido corretamente
+        assertEq(token.tokenURI(tokenId), uri);
     }
 
-    function testMintingByNonOwner() public { // Testa a cunhagem de tokens por um não proprietário
-        vm.prank(voter1); // simula a chamada da função pelo eleitor 1
-        vm.expectRevert("Ownable: caller is not the owner");   // espera que a chamada reverta com a mensagem de erro
-        token.mint(voter1, 1); //  o eleitor 1 tenta cunhar um token para si mesmo
-    }
+    // Testa que um não-owner não pode mintar
+    function testMintByNonOwnerReverts() public {
+        string memory uri = "ipfs://token2";
 
-    function testTransferability() public { // Testa a transferibilidade dos tokens
-        token.mint(voter1, 1); // o proprietário cunha um token para o eleitor 1
-        vm.prank(voter1); // simula a chamada da função pelo eleitor 1
-        token.transfer(voter2, 1); // o eleitor 1 transfere o token para o eleitor 2
-        assertEq(token.balanceOf(voter2), 1); // verifica se o eleitor 2 possui 1 token
-        assertEq(token.balanceOf(voter1), 0); // verifica se o eleitor 1 não possui mais tokens
+        // Simula chamada pelo voter1
+        vm.prank(voter1);
+
+        // Espera que reverta com a mensagem do Ownable
+        // Agora ownable não recebe string e sim uma resposta custmomizada
+        vm.expectRevert(
+            abi.encodeWithSelector(
+                Ownable.OwnableUnauthorizedAccount.selector,
+                voter1
+            )
+        );
+
+        // Tentativa de cunhar pelo não-owner
+        token.mintComprovante(voter1, uri);
     }
 }
-
