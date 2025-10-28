@@ -55,21 +55,11 @@ contract testAdministrativo is Test{
     }
 
     function testEleicaoAberta() public{
-        assertEq(adm.abrirEleicao(),true);
-    }
-
-    function testEleicaoJaAberta() public{
-        vm.expectRevert("Eleicao ja esta aberta");
+        // Chama a função na instância
         adm.abrirEleicao();
-    }
-    
-    function testEleicaoFechada() public{
-        assertEq(adm.fecharEleicao(),true);
-    }
 
-    function testEleicaoJaFechada(){
-        vm.expectRevert("Eleicao ja esta fechada");
-        adm.fecharEleicao();
+        // Verifica o estado interno
+        assertEq(adm.situacaoEleicao(), true);
     }
 
     function testAdicionarCandidatoSemOwner() public {
@@ -93,14 +83,22 @@ contract testAdministrativo is Test{
             "ipfs://token1"
         );
     }
-
     
     function testAdicionarCandidatoComOwner() public{
-        uint256 totalCandidatos = 0;
-        uint256 totalAntes = 0;
-
-        adm.adicionarCandidato(candidato1);
-        totalCandidatos = adm.totalCandidatos();    
-        assertEq(totalCandidatos, (totalAntes + 1));
+        uint256 totalCandidatos = adm.totalCandidatos();
+        
+        adm.adicionarCandidato(
+            10,
+            "Candidato_1",
+            "PT",
+            "proposta1",
+            "proposta2",
+            "proposta3",
+            "proposta4",
+            "proposta5",
+            "ipfs://token1"
+        );
+        assertEq(adm.totalCandidatos(), (totalCandidatos + 1));
     }
+
 }

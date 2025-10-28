@@ -40,7 +40,7 @@ contract Administrativo is Ownable(msg.sender){
 
 
     /// STATE VARIABLES ///
-    uint256 private totalCandidatos = 0;
+    uint256 public totalCandidatos = 0;
     uint256 public totalVotos = 0;
     bool public situacaoEleicao = false;
     uint256[] public numerosCandidatos;
@@ -167,4 +167,6 @@ contract Administrativo is Ownable(msg.sender){
         }
         return resultados;
     }
+
+    
 }   
