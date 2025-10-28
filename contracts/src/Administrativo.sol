@@ -90,6 +90,7 @@ contract Administrativo is Ownable(msg.sender){
     }
 
     function abrirEleicao() external onlyOwner {
+        require(situacaoEleicao == false, "Eleicao ja esta aberta");
         situacaoEleicao = true;
     }
 

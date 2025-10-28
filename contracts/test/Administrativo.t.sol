@@ -62,6 +62,15 @@ contract testAdministrativo is Test{
         assertEq(adm.situacaoEleicao(), true);
     }
 
+    function testEleicaoJaAberta()public{
+        adm.abrirEleicao();
+
+        // Espera que reverta com o erro correto do Ownable
+        vm.expectRevert(bytes("Eleicao ja esta aberta"));
+        adm.abrirEleicao();
+    }
+
+
     function testAdicionarCandidatoSemOwner() public {
         // Espera que reverta com o erro correto do Ownable
         vm.expectRevert(abi.encodeWithSelector(
