@@ -9,7 +9,7 @@ contract Administrativo is Ownable(msg.sender){
     address public administrador;
     ComprovanteToken public comprovante;
     
-    struct Candidato{
+    struct  Candidato {
         uint256 idCandidato;
         uint256 numero;
         string nome;
@@ -21,7 +21,7 @@ contract Administrativo is Ownable(msg.sender){
         string proposta5;
         string uri;
         bool existe;
-    }
+    } 
 
     struct resultadoParcial{
         uint256 numero;
@@ -40,7 +40,7 @@ contract Administrativo is Ownable(msg.sender){
 
 
     /// STATE VARIABLES ///
-    uint256 private totalCandidatos = 0;
+    uint256 public totalCandidatos = 0;
     uint256 public totalVotos = 0;
     bool public situacaoEleicao = false;
     uint256[] public numerosCandidatos;
@@ -90,10 +90,12 @@ contract Administrativo is Ownable(msg.sender){
     }
 
     function abrirEleicao() external onlyOwner {
+        require(situacaoEleicao == false, "Eleicao ja esta aberta");
         situacaoEleicao = true;
     }
 
     function fecharEleicao() external onlyOwner {
+        require(situacaoEleicao == true, "Eleicao ja esta fechada");
         situacaoEleicao = false;
     }
         
@@ -167,4 +169,6 @@ contract Administrativo is Ownable(msg.sender){
         }
         return resultados;
     }
+
+    
 }   
