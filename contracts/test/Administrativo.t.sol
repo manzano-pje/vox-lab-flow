@@ -76,6 +76,11 @@ contract testAdministrativo is Test{
         assertEq(adm.situacaoEleicao(), false);
     }
 
+        function testEleicaoJaFechada() public{
+        vm.expectRevert(bytes("Eleicao ja esta fechada"));
+        adm.fecharEleicao();
+    }
+
     function testAdicionarCandidatoSemOwner() public {
         // Espera que reverta com o erro correto do Ownable
         vm.expectRevert(abi.encodeWithSelector(
@@ -114,5 +119,7 @@ contract testAdministrativo is Test{
         );
         assertEq(adm.totalCandidatos(), (totalCandidatos + 1));
     }
+
+
 
 }
