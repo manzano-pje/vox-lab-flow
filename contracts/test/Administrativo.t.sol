@@ -54,7 +54,7 @@ contract testAdministrativo is Test{
         situacaoEleicao = true;
     }
 
-    function testEleicaoAberta() public{
+    function testAbrirEleicao() public{
         // Chama a função na instância
         adm.abrirEleicao();
 
@@ -70,6 +70,11 @@ contract testAdministrativo is Test{
         adm.abrirEleicao();
     }
 
+    function testFecharEleicao() public{
+        adm.abrirEleicao();
+        adm.fecharEleicao();
+        assertEq(adm.situacaoEleicao(), false);
+    }
 
     function testAdicionarCandidatoSemOwner() public {
         // Espera que reverta com o erro correto do Ownable

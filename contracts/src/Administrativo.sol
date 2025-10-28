@@ -95,6 +95,7 @@ contract Administrativo is Ownable(msg.sender){
     }
 
     function fecharEleicao() external onlyOwner {
+        require(situacaoEleicao == true, "Eleicao ja esta fechada");
         situacaoEleicao = false;
     }
         
