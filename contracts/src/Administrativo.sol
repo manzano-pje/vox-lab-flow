@@ -9,7 +9,7 @@ contract Administrativo is Ownable(msg.sender){
     address public administrador;
     ComprovanteToken public comprovante;
     
-    struct Candidato{
+    struct  Candidato {
         uint256 idCandidato;
         uint256 numero;
         string nome;
@@ -21,7 +21,7 @@ contract Administrativo is Ownable(msg.sender){
         string proposta5;
         string uri;
         bool existe;
-    }
+    } 
 
     struct resultadoParcial{
         uint256 numero;
