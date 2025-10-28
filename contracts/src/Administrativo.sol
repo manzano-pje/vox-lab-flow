@@ -4,7 +4,7 @@ pragma solidity ^0.8.20;
 import "openzeppelin/access/Ownable.sol";
 import "./ComprovanteToken.sol";
 
-contract Administrativo is Ownable{
+contract Administrativo is Ownable(msg.sender){
 
     address public administrador;
     ComprovanteToken public comprovante;
@@ -158,7 +158,7 @@ contract Administrativo is Ownable{
         resultadoParcial[] memory resultados = new resultadoParcial[](totalCandidatos);
         for (uint256 i = 0; i < totalCandidatos; i++) {
             uint256 numero = numerosCandidatos[i];
-            string nome = listaCandidatos[numero].nome;
+            string memory nome = listaCandidatos[i].nome;
             resultados[i] = resultadoParcial({
                 numero: numero,
                 nome: nome,
