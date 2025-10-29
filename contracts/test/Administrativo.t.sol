@@ -76,6 +76,11 @@ contract testAdministrativo is Test{
         assertEq(adm.situacaoEleicao(), false);
     }
 
+    function testEleicaoJaFechada() public{
+        vm.expectRevert(bytes("Eleicao ja esta fechada"));
+        adm.fecharEleicao();
+    }
+
     function testAdicionarCandidatoSemOwner() public {
         // Espera que reverta com o erro correto do Ownable
         vm.expectRevert(abi.encodeWithSelector(
@@ -114,5 +119,61 @@ contract testAdministrativo is Test{
         );
         assertEq(adm.totalCandidatos(), (totalCandidatos + 1));
     }
+
+    function testEleitorNaoVotou()public{
+        bool votou = adm.eleitorJaVotou(voter1);
+        assertEq(votou, false);
+    }
+
+    function testEleitorjaVotou() public{
+        vm.prank(owner);
+        adm.abrirEleicao();
+        adm.adicionarCandidato(
+            10, "Candidato_1","PT", "proposta1","proposta2","proposta3","proposta4",
+            "proposta5", "ipfs://token1"
+        );
+        vm.prank(voter1);
+        adm.gravaVotos(10);
+
+        bool votou = adm.eleitorJaVotou(voter1);
+        
+        assertEq(votou, true);
+    }
+
+    function testGravaVotos() public{
+        vm.prank(owner);
+        adm.abrirEleicao();
+        adm.adicionarCandidato(
+            10, "Candidato_1","PT", "proposta1","proposta2","proposta3","proposta4",
+            "proposta5", "ipfs://token1"
+        );
+        vm.prank(voter1);
+        adm.eleitorJaVotou(voter1);
+
+        uint256 votos = adm.votosCandidato(10);
+        adm.gravaVotos(10);
+
+        assertEq(adm.votosCandidato(10), votos + 1);
+    }
+
+    function testVotosTotais() public{
+        vm.prank(owner);
+        adm.abrirEleicao();
+        adm.adicionarCandidato(
+            10, "Candidato_1","PT", "proposta1","proposta2","proposta3","proposta4",
+            "proposta5", "ipfs://token1"
+        );
+        adm.adicionarCandidato(
+             20, "Candidato_2", "PL", "proposta1", "proposta2", "proposta3", "proposta4",
+             "proposta5", "ipfs://token2"
+        );
+        vm.prank(voter1);
+        adm.gravaVotos(10);
+        vm.prank(voter2);
+        adm.gravaVotos(20);
+
+        assertEq(adm.votosTotais(), 2);
+
+    }    
 
 }
