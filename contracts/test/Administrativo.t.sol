@@ -140,4 +140,19 @@ contract testAdministrativo is Test{
         assertEq(votou, true);
     }
 
+    function testGravaVotos() public{
+        vm.prank(owner);
+        adm.abrirEleicao();
+        adm.adicionarCandidato(
+            10, "Candidato_1","PT", "proposta1","proposta2","proposta3","proposta4",
+            "proposta5", "ipfs://token1"
+        );
+        vm.prank(voter1);
+        adm.eleitorJaVotou(voter1);
+
+        uint256 votos = adm.votosCandidato(10);
+        adm.gravaVotos(10);
+
+        assertEq(adm.votosCandidato(10), votos + 1);
+    }
 }
