@@ -154,12 +154,14 @@ contract Administrativo is Ownable(msg.sender){
 
     function estatisticasParciais() public onlyOwner view returns (resultadoParcial[] memory) {
         resultadoParcial[] memory resultados = new resultadoParcial[](totalCandidatos);
+       
         for (uint256 i = 0; i < totalCandidatos; i++) {
             uint256 numero = numerosCandidatos[i];
-            string memory nome = listaCandidatos[i].nome;
+            Candidato storage cand = listaCandidatos[numero];
+
             resultados[i] = resultadoParcial({
                 numero: numero,
-                nome: nome,
+                nome: cand.nome,
                 votos: votosCandidato[numero]
             });
         }
