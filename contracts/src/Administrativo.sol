@@ -125,11 +125,11 @@ contract Administrativo is Ownable(msg.sender){
         emit ConfirmaVoto(msg.sender, cand.nome, cand.partido, numero);
     }
 
-    function votosPorCandidato(uint256 numero) external onlyOwner view returns (uint256) {
+    function votosPorCandidato(uint256 numero) external  view returns (uint256) {
         return votosCandidato[numero];
     }
     
-    function votosTotais() external onlyOwner view returns (uint256) {
+    function votosTotais() external  view returns (uint256) {
         return totalVotos;
     }
 

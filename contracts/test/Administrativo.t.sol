@@ -155,4 +155,25 @@ contract testAdministrativo is Test{
 
         assertEq(adm.votosCandidato(10), votos + 1);
     }
+
+    function testVotosTotais() public{
+        vm.prank(owner);
+        adm.abrirEleicao();
+        adm.adicionarCandidato(
+            10, "Candidato_1","PT", "proposta1","proposta2","proposta3","proposta4",
+            "proposta5", "ipfs://token1"
+        );
+        adm.adicionarCandidato(
+             20, "Candidato_2", "PL", "proposta1", "proposta2", "proposta3", "proposta4",
+             "proposta5", "ipfs://token2"
+        );
+        vm.prank(voter1);
+        adm.gravaVotos(10);
+        vm.prank(voter2);
+        adm.gravaVotos(20);
+
+        assertEq(adm.votosTotais(), 2);
+
+    }    
+
 }
