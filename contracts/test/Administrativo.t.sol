@@ -236,9 +236,7 @@ contract testAdministrativo is Test{
              20, "Candidato_2", "PL", "proposta1", "proposta2", "proposta3", "proposta4",
              "proposta5", "ipfs://token2"
         );
-
-
-                // Votação
+        // Votação
         vm.prank(voter1);
         adm.gravaVotos(10);
         vm.prank(voter2);
@@ -253,20 +251,19 @@ contract testAdministrativo is Test{
         adm.listarCandidatos();
     }
 
+    function testListarCandidatos() public{
+        vm.prank(owner);
+        // Cadastro dos cndidatos
+        adm.adicionarCandidato(
+            10, "Candidato_1","PT", "proposta1","proposta2","proposta3","proposta4",
+            "proposta5", "ipfs://token1"
+        );
+        adm.adicionarCandidato(
+             20, "Candidato_2", "PL", "proposta1", "proposta2", "proposta3", "proposta4",
+             "proposta5", "ipfs://token2"
+        );
 
-
-
-
-// function listarCandidatos () public onlyOwner view returns(Candidato[] memory){
-//         require(totalCandidatos != 0, "Nao existem candidatos cadastrados");
-
-//         Candidato[] memory candidatos = new Candidato[](totalCandidatos);
-//         for (uint256 i = 0; i < totalCandidatos; i++){
-//             uint256 numero = numerosCandidatos[i];
-//             candidatos[i] = listaCandidatos[numero];
-
-//         }
-//         return candidatos;
-//     }    
-
+        Administrativo.Candidato[] memory lista = adm.listarCandidatos();
+        assertEq(lista.length, 2);
+    }
 }
