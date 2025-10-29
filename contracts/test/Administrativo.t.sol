@@ -176,4 +176,126 @@ contract testAdministrativo is Test{
 
     }    
 
+    function testCandidatoVencedor() public {
+        vm.prank(owner);
+        adm.abrirEleicao();
+       
+       // Cadastro dos cndidatos
+        adm.adicionarCandidato(
+            10, "Candidato_1","PT", "proposta1","proposta2","proposta3","proposta4",
+            "proposta5", "ipfs://token1"
+        );
+        adm.adicionarCandidato(
+             20, "Candidato_2", "PL", "proposta1", "proposta2", "proposta3", "proposta4",
+             "proposta5", "ipfs://token2"
+        );
+       
+        // Votação
+        vm.prank(voter1);
+        adm.gravaVotos(10);
+        vm.prank(voter2);
+        adm.gravaVotos(10);
+                
+        vm.prank(owner);                
+        // ✅ Captura dos retornos da função
+        (Administrativo.Candidato memory vencedor, uint256 votos) = adm.candidatoVencedor();
+
+        // ✅ Verificações
+        assertEq(vencedor.numero, 10);
+        assertEq(votos, 2);
+    }
+
+    function testTotalDeCandidatos() public{
+        vm.prank(owner);
+        adm.abrirEleicao();
+       
+       // Cadastro dos cndidatos
+        adm.adicionarCandidato(
+            10, "Candidato_1","PT", "proposta1","proposta2","proposta3","proposta4",
+            "proposta5", "ipfs://token1"
+        );
+        adm.adicionarCandidato(
+             20, "Candidato_2", "PL", "proposta1", "proposta2", "proposta3", "proposta4",
+             "proposta5", "ipfs://token2"
+        );
+
+        // Verificação
+        assertEq(adm.totalDeCandidatos(),2);
+    }
+
+    function testVotosPorCandidato() public{
+        vm.prank(owner);
+        adm.abrirEleicao();
+       
+       // Cadastro dos cndidatos
+        adm.adicionarCandidato(
+            10, "Candidato_1","PT", "proposta1","proposta2","proposta3","proposta4",
+            "proposta5", "ipfs://token1"
+        );
+        adm.adicionarCandidato(
+             20, "Candidato_2", "PL", "proposta1", "proposta2", "proposta3", "proposta4",
+             "proposta5", "ipfs://token2"
+        );
+        // Votação
+        vm.prank(voter1);
+        adm.gravaVotos(10);
+        vm.prank(voter2);
+        adm.gravaVotos(10);
+                
+        vm.prank(owner); 
+        assertEq(adm.votosPorCandidato(10),2);
+    }
+
+    function testListarCandidatosVazio() public{
+        vm.expectRevert(bytes("Nao existem candidatos cadastrados"));
+        adm.listarCandidatos();
+    }
+
+    function testListarCandidatos() public{
+        vm.prank(owner);
+        // Cadastro dos cndidatos
+        adm.adicionarCandidato(
+            10, "Candidato_1","PT", "proposta1","proposta2","proposta3","proposta4",
+            "proposta5", "ipfs://token1"
+        );
+        adm.adicionarCandidato(
+             20, "Candidato_2", "PL", "proposta1", "proposta2", "proposta3", "proposta4",
+             "proposta5", "ipfs://token2"
+        );
+
+        Administrativo.Candidato[] memory lista = adm.listarCandidatos();
+        assertEq(lista.length, 2);
+    }
+
+    function testEsttisticasParciais() public {
+        vm.prank(owner);
+        adm.abrirEleicao();
+       
+       // Cadastro dos cndidatos
+        adm.adicionarCandidato(
+            10, "Candidato_1","PT", "proposta1","proposta2","proposta3","proposta4",
+            "proposta5", "ipfs://token1"
+        );
+        adm.adicionarCandidato(
+             20, "Candidato_2", "PL", "proposta1", "proposta2", "proposta3", "proposta4",
+             "proposta5", "ipfs://token2"
+        );
+        // Votação
+        vm.prank(voter1);
+        adm.gravaVotos(10);
+        vm.prank(voter2);
+        adm.gravaVotos(20);
+                
+        vm.prank(owner); 
+        Administrativo.resultadoParcial[] memory resultado = adm.estatisticasParciais();
+
+        assertEq(resultado[0].numero, 10);
+        assertEq(resultado[0].nome, "Candidato_1");
+        assertEq(resultado[0].votos, 1);
+        
+        assertEq(resultado[1].numero, 20);
+        assertEq(resultado[1].nome, "Candidato_2");
+        assertEq(resultado[1].votos, 1);
+    
+    }
 }
