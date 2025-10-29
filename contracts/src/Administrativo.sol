@@ -50,10 +50,6 @@ contract Administrativo is Ownable(msg.sender){
         comprovante = new ComprovanteToken();
     }
 
-    modifier apenasAdministrador() {
-        require(msg.sender == administrador, "Apenas o administrador pode executar esta acao.");
-        _;
-    }
     modifier statusEleicao() {
         require (situacaoEleicao, "Fora do horario de votacao.");
         _;
@@ -111,7 +107,7 @@ contract Administrativo is Ownable(msg.sender){
         return candidatos;
     }    
 
-    function eleitorJaVotou(address eleitor) public onlyOwner view returns (bool) {
+    function eleitorJaVotou(address eleitor) public view returns (bool) {
         return jaVotou[eleitor];
     }
 

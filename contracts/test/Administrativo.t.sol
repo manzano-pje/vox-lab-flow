@@ -76,7 +76,7 @@ contract testAdministrativo is Test{
         assertEq(adm.situacaoEleicao(), false);
     }
 
-        function testEleicaoJaFechada() public{
+    function testEleicaoJaFechada() public{
         vm.expectRevert(bytes("Eleicao ja esta fechada"));
         adm.fecharEleicao();
     }
@@ -120,6 +120,24 @@ contract testAdministrativo is Test{
         assertEq(adm.totalCandidatos(), (totalCandidatos + 1));
     }
 
+    function testEleitorNaoVotou()public{
+        bool votou = adm.eleitorJaVotou(voter1);
+        assertEq(votou, false);
+    }
 
+    function testEleitorjaVotou() public{
+        vm.prank(owner);
+        adm.abrirEleicao();
+        adm.adicionarCandidato(
+            10, "Candidato_1","PT", "proposta1","proposta2","proposta3","proposta4",
+            "proposta5", "ipfs://token1"
+        );
+        vm.prank(voter1);
+        adm.gravaVotos(10);
+
+        bool votou = adm.eleitorJaVotou(voter1);
+        
+        assertEq(votou, true);
+    }
 
 }
