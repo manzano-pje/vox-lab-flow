@@ -248,5 +248,25 @@ contract testAdministrativo is Test{
         assertEq(adm.votosPorCandidato(10),2);
     }
 
+    function testListarCandidatosVazio() public{
+        vm.expectRevert(bytes("Nao existem candidatos cadastrados"));
+        adm.listarCandidatos();
+    }
+
+
+
+
+
+// function listarCandidatos () public onlyOwner view returns(Candidato[] memory){
+//         require(totalCandidatos != 0, "Nao existem candidatos cadastrados");
+
+//         Candidato[] memory candidatos = new Candidato[](totalCandidatos);
+//         for (uint256 i = 0; i < totalCandidatos; i++){
+//             uint256 numero = numerosCandidatos[i];
+//             candidatos[i] = listaCandidatos[numero];
+
+//         }
+//         return candidatos;
+//     }    
 
 }

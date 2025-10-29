@@ -95,7 +95,7 @@ contract Administrativo is Ownable(msg.sender){
         situacaoEleicao = false;
     }
         
-    function listarCandidatos () public onlyOwner view returns(Candidato[] memory){
+    function listarCandidatos () public view returns(Candidato[] memory){
         require(totalCandidatos != 0, "Nao existem candidatos cadastrados");
 
         Candidato[] memory candidatos = new Candidato[](totalCandidatos);
