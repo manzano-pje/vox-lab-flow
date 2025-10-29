@@ -176,4 +176,33 @@ contract testAdministrativo is Test{
 
     }    
 
+    function testCandidatoVencedor() public {
+        vm.prank(owner);
+        adm.abrirEleicao();
+       
+       // Cadastro dos cndidatos
+        adm.adicionarCandidato(
+            10, "Candidato_1","PT", "proposta1","proposta2","proposta3","proposta4",
+            "proposta5", "ipfs://token1"
+        );
+        adm.adicionarCandidato(
+             20, "Candidato_2", "PL", "proposta1", "proposta2", "proposta3", "proposta4",
+             "proposta5", "ipfs://token2"
+        );
+       
+        // Votação
+        vm.prank(voter1);
+        adm.gravaVotos(10);
+        vm.prank(voter2);
+        adm.gravaVotos(10);
+                
+        vm.prank(owner);                
+        // ✅ Captura dos retornos da função
+        (Administrativo.Candidato memory vencedor, uint256 votos) = adm.candidatoVencedor();
+
+        // ✅ Verificações
+        assertEq(vencedor.numero, 10);
+        assertEq(votos, 2);
+    }
+
 }
